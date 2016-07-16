@@ -1,0 +1,11 @@
+# Template labels
+# PLEASE DO NOT EDIT THE 2nd FIELD! (name)
+# ID, name, file
+0, T1-weighted template, PAM50_t1.nii.gz
+1, T2-weighted template, PAM50_t2.nii.gz
+2, T2*-weighted template, PAM50_t2s.nii.gz
+3, spinal cord, PAM50_cord.nii.gz
+4, white matter, PAM50_wm.nii.gz
+5, gray matter, PAM50_gm.nii.gz
+6, cerebrospinal fluid, PAM50_csf.nii.gz
+7, vertebral labeling, PAM50_levels.nii.gz
