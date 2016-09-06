@@ -1,5 +1,25 @@
 #PAM50 Template
 
+##2016-09-02 (JCA)
+- Created new WM atlas using commit: 8a91d5fbdba6cf222de3880d9777cef46d736256
+
+##2016-08-30 (JCA)
+- added "8, spine, PAM50_spine.nii.gz" in template/info_label.txt
+
+##2016-08-26 (JCA)
+- modified "PAM50_label_disc.nii.gz"
+- updated PAM50_levels accordingly
+~~~
+sct_process_segmentation -i PAM50_cord.nii.gz -p label-vert -discfile PAM50_label_disc.nii.gz
+~~~
+
+##2016-08-25 (JCA)
+- extended cord segmentation towards caudal end using ITKsnap: only one half, then used a function to copy the other half (see below)
+- extended cord segmentation towards rostral end using:
+~~~
+python $SCT_DIR/dev/atlas/create_atlas/register_AMU_to_PAM.py
+~~~
+
 ##2016-07-15 (JCA)
 - Modified cord segmentation because slightly too large.
 - Symmetrized cord segmentation

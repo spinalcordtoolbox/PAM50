@@ -9,3 +9,4 @@
 5, gray matter, PAM50_gm.nii.gz
 6, cerebrospinal fluid, PAM50_csf.nii.gz
 7, vertebral labeling, PAM50_levels.nii.gz
+8, spine, PAM50_spine.nii.gz

@@ -1,4 +1,4 @@
-# White matter atlas. Generated on: 16-Jul-2016
+# White matter atlas. Generated on: 01-Sep-2016
 # ID, name, file
 0, WM left fasciculus gracilis, PAM50_atlas_00.nii.gz
 1, WM right fasciculus gracilis, PAM50_atlas_01.nii.gz
