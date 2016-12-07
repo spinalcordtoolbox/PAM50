@@ -1,5 +1,12 @@
 #PAM50 Template
 
+##2016-11-28 (JCA)
+- added spinal levels using $SCT_DIR/dev/spinal_level/sct_extract_spinal_levels.py
+- Removed __MACOSX in archive using
+~~~
+zip -r 20161121_PAM50.zip PAM50/
+~~~
+
 ##2016-11-21 (JCA)
 - Added #Keyword= entries for cleaner code
 
