@@ -46,9 +46,9 @@
 50, spinal cord, 0:35
 51, white matter, 0:29
 52, gray matter, 30:35
-52, dorsal columns, 0:3
-53, lateral funiculi, 4:13
-54, ventral funiculi, 14:29
+53, dorsal columns, 0:3
+54, lateral funiculi, 4:13
+55, ventral funiculi, 14:29
 
 # Clusters used for the first step of the MAP estimation (for advanced users only)
 # Keyword=MAPLabels (Please DO NOT change this line)

@@ -1,8 +1,14 @@
 #PAM50 Template
 
+##2017-01-07 (JCA)
+- Fixed typo in atlas info_label.txt (issue #1100)
+
+##2017-01-01 (JCA)
+- Atlas now sums to one inside the cord (fixed issue #411)
+
 ##2016-11-28 (JCA)
 - added spinal levels using $SCT_DIR/dev/spinal_level/sct_extract_spinal_levels.py
-- Removed __MACOSX in archive using
+- Removed __MACOSX in archive and zip using
 ~~~
 zip -r 20161121_PAM50.zip PAM50/
 ~~~
