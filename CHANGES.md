@@ -1,5 +1,8 @@
 #PAM50 Template
 
+##2018-04-10 (BDL)
+- Added labels 49 (pontomedullary groove) and 50 (pontomedullary junction) to template/PAM50_label_disc.nii.gz
+
 ##2017-01-07 (JCA)
 - Fixed typo in atlas info_label.txt (issue #1100)
 
