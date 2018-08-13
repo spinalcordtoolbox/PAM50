@@ -1,5 +1,8 @@
 #PAM50 Template
 
+##2018-08-13 (JCA)
+- Swapped ventral-dorsal labels on PAM50/atlas (fixed issue #1995)
+
 ##2018-04-10 (BDL)
 - Added labels 49 (pontomedullary groove) and 50 (pontomedullary junction) to template/PAM50_label_disc.nii.gz
 

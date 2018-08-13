@@ -32,12 +32,12 @@
 27, WM right medial reticulospinal tract, PAM50_atlas_27.nii.gz
 28, WM left medial longitudinal fasciculus, PAM50_atlas_28.nii.gz
 29, WM right medial longitudinal fasciculus, PAM50_atlas_29.nii.gz
-30, GM left dorsal horn, PAM50_atlas_30.nii.gz
-31, GM right dorsal horn, PAM50_atlas_31.nii.gz
+30, GM left ventral horn, PAM50_atlas_30.nii.gz
+31, GM right ventral horn, PAM50_atlas_31.nii.gz
 32, GM left intermediate zone, PAM50_atlas_32.nii.gz
 33, GM right intermediate zone, PAM50_atlas_33.nii.gz
-34, GM left ventral horn, PAM50_atlas_34.nii.gz
-35, GM right ventral horn, PAM50_atlas_35.nii.gz
+34, GM left dorsal horn, PAM50_atlas_34.nii.gz
+35, GM right dorsal horn, PAM50_atlas_35.nii.gz
 36, CSF contour, PAM50_atlas_36.nii.gz
 
 # Combined labels
