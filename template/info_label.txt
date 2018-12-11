@@ -9,3 +9,10 @@
 5, gray matter, PAM50_gm.nii.gz
 6, cerebrospinal fluid, PAM50_csf.nii.gz
 7, vertebral labeling, PAM50_levels.nii.gz
+8, continuous vertebral labeling, PAM50_levels_continuous.nii.gz
+9, vertebral body labeling, PAM50_label_body.nii.gz
+10, intervertebral discs labeling, PAM50_label_disc.nii.gz
+11, intervertebral discs labeling posterior, PAM50_label_discPosterior.nii.gz
+12, spine, PAM50_spine.nii.gz
+13, centerline, PAM50_centerline.nii.gz
+

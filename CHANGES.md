@@ -1,5 +1,11 @@
 #PAM50 Template
 
+##2018-12-11 (BDL)
+- Aligned the template with the ICBM152 (more info here: https://github.com/neuropoly/spinalcordtoolbox/issues/2085)
+- Cropped the template just above C1 vertebral label
+- Updated the file info_label.txt in the folder template/ to take new files into account
+- Shifted the labels in the file PAM50_label_discPosterior.nii.gz by one
+
 ##2018-08-13 (JCA)
 - Swapped ventral-dorsal labels on PAM50/atlas (fixed issue #1995)
 
