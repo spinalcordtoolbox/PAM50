@@ -1,5 +1,9 @@
 #PAM50 Template
 
+##2019-10-29 (CG)
+- Added template/PAM50_label_spinal_levels.nii.gz
+- Clarify label names in template/info_label.txt
+
 ##2018-12-11 (BDL)
 - Aligned the template with the ICBM152 (more info here: https://github.com/neuropoly/spinalcordtoolbox/issues/2085)
 - Cropped the template just above C1 vertebral label
