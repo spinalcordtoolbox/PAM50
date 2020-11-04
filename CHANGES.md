@@ -1,6 +1,6 @@
 #PAM50 Template
 
-##2020-11-03 (JCA)
+##2020-11-04 (JCA)
 - Updated template/PAM50_levels.nii.gz and template/PAM50_levels_continuous.nii.gz to match with template/PAM50_cord.nii.gz (Fixes https://github.com/neuropoly/spinalcordtoolbox/issues/2172).
 
 ##2019-10-29 (CG)
