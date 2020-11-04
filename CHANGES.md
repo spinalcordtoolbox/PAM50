@@ -1,5 +1,8 @@
 #PAM50 Template
 
+##2020-11-03 (JCA)
+- Updated template/PAM50_levels.nii.gz and template/PAM50_levels_continuous.nii.gz to match with template/PAM50_cord.nii.gz (Fixes https://github.com/neuropoly/spinalcordtoolbox/issues/2172).
+
 ##2019-10-29 (CG)
 - Added template/PAM50_label_spinal_levels.nii.gz
 - Clarify label names in template/info_label.txt
@@ -44,7 +47,7 @@ sct_propseg -i PAM50_t1.nii.gz -c t1
 # manual edits
 # symmetrized cord then binarized
 sct_maths -i PAM50_cord2.nii.gz -symmetrize 0 -o PAM50_cord2_sym.nii.gz
-sct_maths -i PAM50_cord2_sym.nii.gz -bin -o PAM50_cord2_sym_bin.nii.gz 
+sct_maths -i PAM50_cord2_sym.nii.gz -bin -o PAM50_cord2_sym_bin.nii.gz
 # add old cord to csf
 sct_maths -i PAM50_cord.nii.gz -add PAM50_csf.nii.gz -o PAM50_cordcsf.nii.gz
 # then substract with new cord segmentation
@@ -55,8 +58,8 @@ sct_maths -i PAM50_cord2_sym_bin.nii.gz -mul PAM50_levels.nii.gz -o PAM50_levels
 sct_maths -i PAM50_cord.nii.gz -laplacian 1 -o PAM50_cord_lapl.nii.gz
 sct_maths -i PAM50_wm.nii.gz -add PAM50_gm.nii.gz -o PAM50_wmgm.nii.gz
 sct_maths -i PAM50_wmgm.nii.gz -thr 0.5 -o PAM50_wmgm_thr.nii.gz
-sct_maths -i PAM50_wmgm_thr.nii.gz -bin -o PAM50_wmgm_thr_bin.nii.gz 
-sct_maths -i PAM50_wmgm_thr_bin.nii.gz -laplacian 1 -o PAM50_wmgm_thr_bin_lapl.nii.gz 
+sct_maths -i PAM50_wmgm_thr.nii.gz -bin -o PAM50_wmgm_thr_bin.nii.gz
+sct_maths -i PAM50_wmgm_thr_bin.nii.gz -laplacian 1 -o PAM50_wmgm_thr_bin_lapl.nii.gz
 sct_register_multimodal -i PAM50_wmgm_thr_bin_lapl.nii.gz -d PAM50_cord_lapl.nii.gz -iseg PAM50_wmgm_thr_bin.nii.gz -dseg PAM50_cord.nii.gz -param step=1,type=seg,algo=slicereg,smooth=3:step=2,type=im,algo=bsplinesyn,iter=5,slicewise=0 -x linear
 sct_apply_transfo -i PAM50_wm.nii.gz -d PAM50_cord.nii.gz -w warp_PAM50_wmgm_thr_bin_lapl2PAM50_cord_lapl.nii.gz -x linear
 ~~~
