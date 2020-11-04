@@ -1,0 +1,13 @@
+release:
+  method: github
+
+mirrors:
+
+  osf:
+    method: osf
+    project: 6zbyf
+    folder: data
+
+postrelease:
+  add_mirror_urls: true
+
