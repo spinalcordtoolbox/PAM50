@@ -1,0 +1,6 @@
+dist/
+build/
+
+*.whl
+*.egg-info
+__pycache__

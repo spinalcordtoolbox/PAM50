@@ -1,0 +1,3 @@
+# this ensures builds are done reliably
+[build-system]
+requires = ["setuptools>=40.8.0", "setuptools_scm[toml]", "wheel"]
