@@ -1,9 +1,9 @@
 # Histology maps
 # ID, description, file
-0, Number of axons in 200µmx200µm,PAMhisto_200um_Naxons.nii.gz
-1, Myelin volume fraction, PAMhisto_200um_MVF.nii.gz
-2, Axon volume fraction, PAMhisto_200um_AVF.nii.gz
-3, Mean axon diameter (>1µm), PAMhisto_200um_EquivDiameter.nii.gz
-4, Number of 1-4µm thick axons in 200µmx200µm, PAMhisto_200um_EquivDiameter14.nii.gz
-5, Number of 4-8µm thick axons in 200µmx200µm, PAMhisto_200um_EquivDiameter48.nii.gz
-6, mean eccentricity, PAMhisto_200um_Eccentricity.nii.gz
+0, Number of axons in 200µmx200µm,PAM50_200um_Naxons.nii.gz
+1, Myelin volume fraction, PAM50_200um_MVF.nii.gz
+2, Axon volume fraction, PAM50_200um_AVF.nii.gz
+3, Mean axon diameter (>1µm), PAM50_200um_EquivDiameter.nii.gz
+4, Number of 1-4µm thick axons in 200µmx200µm, PAM50_200um_EquivDiameter14.nii.gz
+5, Number of 4-8µm thick axons in 200µmx200µm, PAM50_200um_EquivDiameter48.nii.gz
+6, mean eccentricity, PAM50_200um_Eccentricity.nii.gz
