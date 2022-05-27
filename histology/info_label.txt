@@ -1,6 +1,7 @@
 # Histology maps
+# Keyword=IndivLabels (Please DO NOT change this line)
 # ID, description, file
-0, Number of axons in 200µmx200µm,PAM50_200um_Naxons.nii.gz
+0, Number of axons in 200µmx200µm, PAM50_200um_Naxons.nii.gz
 1, Myelin volume fraction, PAM50_200um_MVF.nii.gz
 2, Axon volume fraction, PAM50_200um_AVF.nii.gz
 3, Mean axon diameter (>1µm), PAM50_200um_EquivDiameter.nii.gz
