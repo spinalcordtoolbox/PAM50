@@ -1,0 +1,65 @@
+ID	Tissu	Lat	Name				File				Label in AMU7T_50_labels.nii.gz
+0	WM	Left	fasciculus-gracilis		AMU7T_label_00_bin.nii.gz	39
+1	WM	Right	fasciculus-gracilis		AMU7T_label_01_bin.nii.gz	1
+2	WM	Left	fasciculus-cuneatus		AMU7T_label_02_bin.nii.gz	2
+3	WM	Right	fasciculus-cuneatus		AMU7T_label_03_bin.nii.gz	3
+4	WM	Left	lateral-corticospinal-tract	AMU7T_label_04_bin.nii.gz	4
+5	WM	Right	lateral-corticospinal-tract	AMU7T_label_05_bin.nii.gz	5
+6	WM	Left	ventral-spinocerebellar-tract	AMU7T_label_06_bin.nii.gz	6
+7	WM	Right	ventral-spinocerebellar-tract	AMU7T_label_07_bin.nii.gz	7
+8	WM	Left	rubrospinal-tract		AMU7T_label_08_bin.nii.gz	8
+9	WM	Right	rubrospinal-tract		AMU7T_label_09_bin.nii.gz	9
+10	WM	Left	lateral-reticulospinal-tract	AMU7T_label_10_bin.nii.gz	10
+11	WM	Right	lateral-reticulospinal-tract	AMU7T_label_11_bin.nii.gz	11
+12	WM	Left	spinal-lemniscus-spinothalamic	AMU7T_label_12_bin.nii.gz	12
+13	WM	Right	spinal-lemniscus-spinothalamic	AMU7T_label_13_bin.nii.gz	13
+14	WM	Left	spino-olivary-tract		AMU7T_label_14_bin.nii.gz	14
+15	WM	Right	spino-olivary-tract		AMU7T_label_15_bin.nii.gz	15
+16	WM	Left	ventrolateral-reticulospinal-tract	AMU7T_label_16_bin.nii.gz	16
+17	WM	Right	ventrolateral-reticulospinal-tract	AMU7T_label_17_bin.nii.gz	17
+18	WM	Left	lateral-vestibulospinal-tract	AMU7T_label_18_bin.nii.gz	18
+19	WM	Right	lateral-vestibulospinal-tract	AMU7T_label_19_bin.nii.gz	19
+20	WM	Left	ventral-reticulospinal-tract	AMU7T_label_20_bin.nii.gz	20
+21	WM	Right	ventral-reticulospinal-tract	AMU7T_label_21_bin.nii.gz	21
+22	WM	Left	ventral-corticospinal-tract	AMU7T_label_22_bin.nii.gz	22
+23	WM	Right	ventral-corticospinal-tract	AMU7T_label_23_bin.nii.gz	23
+24	WM	Left	tectospinal-tract		AMU7T_label_24_bin.nii.gz	24
+25	WM	Right	tectospinal-tract		AMU7T_label_25_bin.nii.gz	25
+26	WM	Left	medial-reticulospinal-tract	AMU7T_label_26_bin.nii.gz	26
+27	WM	Right	medial-reticulospinal-tract	AMU7T_label_27_bin.nii.gz	27
+28	WM	Left	medial-longitudinal-fasciculus	AMU7T_label_28_bin.nii.gz	28
+29	WM	Right	medial-longitudinal-fasciculus	AMU7T_label_29_bin.nii.gz	29
+301	GM	Left	medial-ventral-horn		AMU7T_label_301_bin.nii.gz	43
+302	GM	Left	central-ventral-horn		AMU7T_label_302_bin.nii.gz	45
+303	GM	Left	lateral-ventral-horn		AMU7T_label_303_bin.nii.gz	44
+311	GM	Right	medial-ventral-horn		AMU7T_label_311_bin.nii.gz	41
+312	GM	Right	central-ventral-horn		AMU7T_label_312_bin.nii.gz	42
+313	GM	Right	lateral-ventral-horn		AMU7T_label_313_bin.nii.gz	40
+321	GM	Left	intermediate-zone		AMU7T_label_321_bin.nii.gz	32
+322	GM	Left	ventral-intermediate-zone	AMU7T_label_322_bin.nii.gz	53
+331	GM	Right	intermediate-zone		AMU7T_label_331_bin.nii.gz	33
+332	GM	Right	ventral-intermediate-zone	AMU7T_label_332_bin.nii.gz	51
+341	GM	Left	reticular-formation		AMU7T_label_341_bin.nii.gz	34
+342	GM	Left	dorsomarginal-nucleus		AMU7T_label_342_bin.nii.gz	46
+343	GM	Left	fasciculus-dorsolateralis	AMU7T_label_343_bin.nii.gz	54
+351	GM	Right	reticular-formation		AMU7T_label_351_bin.nii.gz	35
+352	GM	Right	dorsomarginal-nucleus		AMU7T_label_352_bin.nii.gz	47
+353	GM	Right	fasciculus-dorsolateralis	AMU7T_label_353_bin.nii.gz	52
+36	CSF	CSF	CSF contour			AMU7T_label_36_bin.nii.gz	72
+37	both	inter 	central-zone			AMU7T_label_37_bin.nii.gz	74
+38	both	inter 	anterior-fissure		AMU7T_label_38_bin.nii.gz	76
+39	both	inter 	septum				AMU7T_label_39_bin.nii.gz	100
+
+Combined labels
+30	GM left ventral horn, 301:303
+31	GM right ventral horn, 311:313
+32	GM left intermediate zone, 321:322
+33	GM right intermediate zone, 331:332
+34	GM left dorsal horn, 341:343
+35	GM right dorsal horn, 351:353
+50	spinal cord, 0:353
+51	white matter, 0:29
+52	gray matter, 301:353
+53	dorsal columns, 0:3
+54	lateral funiculi, 4:13
+55	ventral funiculi, 14:29

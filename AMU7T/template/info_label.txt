@@ -1,0 +1,6 @@
+ID	Name						File
+0	7T qT1 template (26 subjects)			AMU26_qt1.nii.gz
+1	7T T2Star-weighted template (72 subjects)	AMU72_t2s.nii.gz
+2	spinal cord mask (probabilistic)		AMU7T_sc.nii.gz
+3	white matter mask (probabilistic)		AMU7T_wm.nii.gz
+4	gray matter mask (probabilistic)		AMU7T_gm.nii.gz
