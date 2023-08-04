@@ -60,6 +60,8 @@ percent_length_segment = [
     {"S5": 0.9},
 ]
 
+print(f"Number of segments: {len(percent_length_segment)}")
+
 # Create a DataFrame from the table data
 # df = pd.DataFrame(table_data, columns=["label", "value"])
 
@@ -70,7 +72,11 @@ percent_length_segment = [
 # encoded_data = df.loc["label1", "value"]
 
 # Verify that the sum of all relative length segment is 100
-# TODO
+total_sum = 0.0
+for item in percent_length_segment:
+    value = list(item.values())[0]
+    total_sum += value
+print(f"Sum across percent segments: {total_sum}")
 
 # Open PAM50 spinal cord segmentation
 nii_spinalcord = nib.load("../template/PAM50_cord.nii.gz")
