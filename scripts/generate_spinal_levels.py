@@ -5,6 +5,11 @@
 # https://www.frontiersin.org/articles/10.3389/fneur.2016.00238/full
 # For more context, see: https://github.com/spinalcordtoolbox/PAM50/issues/16
 # 
+# How to run:
+#   cd where this script is located and run:
+#   python generate_spinal_levels.py
+#   This will generate the file "PAM50_spinal_levels.nii.gz"
+# 
 # Author: Julien Cohen-Adad
 
 import numpy as np
@@ -68,7 +73,7 @@ percent_length_segment = [
 # TODO
 
 # Open PAM50 spinal cord segmentation
-nii_spinalcord = nib.load("../PAM50/template/PAM50_cord.nii.gz")
+nii_spinalcord = nib.load("../template/PAM50_cord.nii.gz")
 
 # Create spinal segments
 data_spinalsegments = np.uint8(nii_spinalcord.get_fdata())
@@ -92,4 +97,7 @@ for level_info in percent_length_segment:
 
 # Save file
 nii_spinalsegments = nib.Nifti1Image(data_spinalsegments, nii_spinalcord.affine)
-nib.save(nii_spinalsegments, "PAM50_spinal_levels.nii.gz")
+fname_out = "PAM50_spinal_levels.nii.gz"
+nib.save(nii_spinalsegments, fname_out)
+
+print(f"Done! 🎉 \nFile created: {fname_out}")
