@@ -29,7 +29,7 @@ length_spinalcord_mm = 0.5 * (984 - 40)
 # TODO: continue with all levels
 percent_length_segment = [
     {"C1": 1.6},
-    {"C2": 2.2},
+    {"C2": 2.2},  # modified from Frostell et al. to reach 100% percent
     {"C3": 3.5},
     {"C4": 3.5},
     {"C5": 3.5},
