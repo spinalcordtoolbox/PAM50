@@ -17,7 +17,7 @@ import nibabel as nib
 
 
 # Identification of the slice on the PAM50 template that corresponds to the upper portion of the C1 nerve rootlets
-z_top = 984
+z_top = 985
 # Identification of the slice on the PAM50 template that corresponds to the caudal end of the spinal cord
 z_bottom = 40
 
