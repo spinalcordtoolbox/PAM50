@@ -82,9 +82,10 @@ print(f"Sum across percent segments: {total_sum}")
 nii_spinalcord = nib.load("../template/PAM50_cord.nii.gz")
 
 # Create spinal segments
-data_spinalsegments = np.uint8(nii_spinalcord.get_fdata())
+data_spinalsegments = nii_spinalcord.get_fdata()
 
-# TODO: zero values above z_top
+# Zero values above z_top
+data_spinalsegments[:, :, z_top:] = 0
 
 z_segment_top = z_top
 i_level = 1
@@ -102,6 +103,7 @@ for level_info in percent_length_segment:
     i_level += 1
 
 # Save file
+# TODO: use proper dtype
 nii_spinalsegments = nib.Nifti1Image(data_spinalsegments, nii_spinalcord.affine)
 fname_out = "PAM50_spinal_levels.nii.gz"
 nib.save(nii_spinalsegments, fname_out)
