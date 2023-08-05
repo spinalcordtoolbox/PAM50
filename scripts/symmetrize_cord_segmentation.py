@@ -16,6 +16,7 @@
 # 
 # Author: Julien Cohen-Adad
 
+import copy
 import numpy as np
 import nibabel as nib
 
@@ -27,9 +28,14 @@ data_seg = nii_seg.get_fdata()
 # Symmetrize image by copying the right to the left
 data_seg[71:, ...] = np.flip(data_seg[:70, ...], axis=0)
 
+# Use proper dtype
+data_seg = np.uint8(data_seg)
+header_seg = nii_seg.header.copy()
+header_seg.set_data_dtype(np.uint8)
+
 # Save file
-# TODO: use proper dtype
-nii_seg_new = nib.Nifti1Image(np.uint8(data_seg), nii_seg.affine)
+# nii_seg_new = copy.deepcopy(nii_seg)
+nii_seg_new = nib.Nifti1Image(data_seg, nii_seg.affine, header_seg)
 fname_out = "PAM50_cord_new.nii.gz"
 nib.save(nii_seg_new, fname_out)
 
