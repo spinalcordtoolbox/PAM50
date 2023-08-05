@@ -12,7 +12,6 @@
 # How to run:
 #   cd where this script is located and run:
 #   python symmetrize_cord_segmentation.py
-#   This will generate the file "PAM50_cord.nii.gz"
 # 
 # Author: Julien Cohen-Adad
 
