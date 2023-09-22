@@ -26,7 +26,6 @@ length_spinalcord = z_top - z_bottom
 length_spinalcord_mm = 0.5 * length_spinalcord
 
 # Build dictionary of spinal segment location based on Table 3 of Frostell et al. article
-# TODO: continue with all levels
 percent_length_segment = [
     {"C1": 1.6},
     {"C2": 2.2},  # modified from Frostell et al. to reach 100% percent
