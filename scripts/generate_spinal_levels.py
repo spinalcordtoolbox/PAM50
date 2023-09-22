@@ -22,8 +22,8 @@ z_top = 985
 z_bottom = 40
 
 # Compute the length of the spinal cord (in mm), knowing that the pixel size along Z is 0.5mm.
-length_spinalcord = 984 - 40
-length_spinalcord_mm = 0.5 * (984 - 40)
+length_spinalcord = z_top - z_bottom
+length_spinalcord_mm = 0.5 * length_spinalcord
 
 # Build dictionary of spinal segment location based on Table 3 of Frostell et al. article
 # TODO: continue with all levels
