@@ -1,0 +1,169 @@
+Segment,MEAN,STD,Mesure
+C2,11.299999999999999,1.5,DREZ length
+C2,12.6,0.8999999999999999,Seg.L at dorsal CE
+C2,13.100000000000001,1.0,Seg.L at BE
+C2,24.4,0.8,Inf.Art facet to CR distance
+C2,15.5,4.2,IF to RR distance
+C2,10.600000000000001,0.7000000000000001,IF to CR distance
+C2,7.88,0.3,Dorsal width
+C3,9.399999999999999,1.9,DREZ length
+C3,13.3,0.7000000000000001,Seg.L at dorsal CE
+C3,13.200000000000001,0.8999999999999999,Seg.L at BE
+C3,25.0,1.7000000000000002,Inf.Art facet to CR distance
+C3,16.299999999999997,2.5,IF to RR distance
+C3,10.8,2.7,IF to CR distance
+C3,7.18,1.11,Dorsal width
+C4,11.6,2.2,DREZ length
+C4,13.899999999999999,2.0,Seg.L at dorsal CE
+C4,14.6,2.5,Seg.L at BE
+C4,26.0,1.4000000000000001,Inf.Art facet to CR distance
+C4,18.1,2.1,IF to RR distance
+C4,10.1,2.0,IF to CR distance
+C4,7.11,0.99,Dorsal width
+C5,12.4,2.0,DREZ length
+C5,15.0,2.2,Seg.L at dorsal CE
+C5,14.299999999999999,1.1,Seg.L at BE
+C5,23.799999999999997,4.5,Inf.Art facet to CR distance
+C5,15.1,2.9,IF to RR distance
+C5,9.3,1.9,IF to CR distance
+C5,7.11,0.9,Dorsal width
+C6,11.5,1.0,DREZ length
+C6,13.600000000000001,1.6,Seg.L at dorsal CE
+C6,14.7,1.3,Seg.L at BE
+C6,24.8,3.9000000000000004,Inf.Art facet to CR distance
+C6,17.2,1.2,IF to RR distance
+C6,10.3,1.0,IF to CR distance
+C6,6.98,0.49,Dorsal width
+C7,11.399999999999999,2.3000000000000003,DREZ length
+C7,11.7,1.7000000000000002,Seg.L at dorsal CE
+C7,14.6,1.5,Seg.L at BE
+C7,26.0,2.3000000000000003,Inf.Art facet to CR distance
+C7,20.099999999999998,0.8,IF to RR distance
+C7,11.799999999999999,0.8999999999999999,IF to CR distance
+C7,6.52,0.68,Dorsal width
+C8,11.799999999999999,2.8000000000000003,DREZ length
+C8,12.5,1.6,Seg.L at dorsal CE
+C8,15.5,2.1,Seg.L at BE
+C8,19.4,2.7,Inf.Art facet to CR distance
+C8,22.7,2.2,IF to RR distance
+C8,15.0,2.5,IF to CR distance
+C8,5.97,0.91,Dorsal width
+T1,12.0,2.2,DREZ length
+T1,13.0,2.8000000000000003,Seg.L at dorsal CE
+T1,17.3,1.6,Seg.L at BE
+T1,22.5,4.4,Inf.Art facet to CR distance
+T1,28.1,3.9000000000000004,IF to RR distance
+T1,17.0,2.9,IF to CR distance
+T1,5.4,1.0,Dorsal width
+T2,13.100000000000001,3.1,DREZ length
+T2,16.4,5.0,Seg.L at dorsal CE
+T2,19.8,4.699999999999999,Seg.L at BE
+T2,26.099999999999998,6.2,Inf.Art facet to CR distance
+T2,33.4,5.6000000000000005,IF to RR distance
+T2,22.0,3.8,IF to CR distance
+T2,4.87,0.63,Dorsal width
+T3,15.3,2.6,DREZ length
+T3,16.1,3.0,Seg.L at dorsal CE
+T3,18.1,2.5,Seg.L at BE
+T3,30.299999999999997,5.8999999999999995,Inf.Art facet to CR distance
+T3,40.5,6.3,IF to RR distance
+T3,23.4,5.0,IF to CR distance
+T3,4.83,0.64,Dorsal width
+T4,18.400000000000002,4.0,DREZ length
+T4,22.799999999999997,3.7,Seg.L at dorsal CE
+T4,21.8,1.9,Seg.L at BE
+T4,28.799999999999997,5.8999999999999995,Inf.Art facet to CR distance
+T4,42.0,4.9,IF to RR distance
+T4,26.299999999999997,6.3,IF to CR distance
+T4,4.7,0.83,Dorsal width
+T5,19.6,4.2,DREZ length
+T5,22.1,4.9,Seg.L at dorsal CE
+T5,20.6,3.4000000000000004,Seg.L at BE
+T5,32.400000000000006,6.8999999999999995,Inf.Art facet to CR distance
+T5,44.400000000000006,6.1,IF to RR distance
+T5,28.1,3.5,IF to CR distance
+T5,4.57,0.76,Dorsal width
+T6,18.799999999999997,3.9000000000000004,DREZ length
+T6,24.8,4.0,Seg.L at dorsal CE
+T6,21.6,3.1,Seg.L at BE
+T6,31.7,6.4,Inf.Art facet to CR distance
+T6,41.6,5.0,IF to RR distance
+T6,23.1,5.0,IF to CR distance
+T6,4.37,0.54,Dorsal width
+T7,20.099999999999998,3.5,DREZ length
+T7,24.5,6.0,Seg.L at dorsal CE
+T7,23.599999999999998,3.5,Seg.L at BE
+T7,33.6,7.7,Inf.Art facet to CR distance
+T7,40.099999999999994,7.199999999999999,IF to RR distance
+T7,21.200000000000003,5.300000000000001,IF to CR distance
+T7,4.64,0.62,Dorsal width
+T8,19.0,3.1,DREZ length
+T8,25.5,4.5,Seg.L at dorsal CE
+T8,24.0,2.5,Seg.L at BE
+T8,34.300000000000004,7.800000000000001,Inf.Art facet to CR distance
+T8,37.0,8.9,IF to RR distance
+T8,22.0,8.100000000000001,IF to CR distance
+T8,5.08,0.55,Dorsal width
+T9,20.4,3.4000000000000004,DREZ length
+T9,23.900000000000002,4.1,Seg.L at dorsal CE
+T9,25.099999999999998,2.9,Seg.L at BE
+T9,36.4,7.4,Inf.Art facet to CR distance
+T9,38.199999999999996,9.9,IF to RR distance
+T9,20.2,6.800000000000001,IF to CR distance
+T9,5.29,0.4,Dorsal width
+T10,19.3,3.7,DREZ length
+T10,25.299999999999997,4.4,Seg.L at dorsal CE
+T10,26.7,3.5,Seg.L at BE
+T10,40.599999999999994,6.800000000000001,Inf.Art facet to CR distance
+T10,40.9,9.399999999999999,IF to RR distance
+T10,24.0,7.5,IF to CR distance
+T10,5.41,0.36,Dorsal width
+T11,15.5,3.9000000000000004,DREZ length
+T11,22.400000000000002,5.0,Seg.L at dorsal CE
+T11,28.5,1.7999999999999998,Seg.L at BE
+T11,43.9,6.1,Inf.Art facet to CR distance
+T11,46.7,9.1,IF to RR distance
+T11,31.0,8.0,IF to CR distance
+T11,5.45,0.39,Dorsal width
+T12,15.600000000000001,3.5999999999999996,DREZ length
+T12,18.400000000000002,2.6,Seg.L at dorsal CE
+T12,27.0,2.1,Seg.L at BE
+T12,52.0,3.3000000000000003,Inf.Art facet to CR distance
+T12,56.8,9.200000000000001,IF to RR distance
+T12,38.8,8.0,IF to CR distance
+T12,5.89,0.29,Dorsal width
+L1,15.2,4.2,DREZ length
+L1,17.5,3.5999999999999996,Seg.L at dorsal CE
+L1,30.299999999999997,5.8,Seg.L at BE
+L1,68.1,5.5,Inf.Art facet to CR distance
+L1,68.1,10.3,IF to RR distance
+L1,54.699999999999996,11.6,IF to CR distance
+L1,5.64,0.5,Dorsal width
+L2,11.799999999999999,3.2,DREZ length
+L2,14.0,2.6,Seg.L at dorsal CE
+L2,29.5,4.1,Seg.L at BE
+L2,85.8,5.1,Inf.Art facet to CR distance
+L2,82.4,14.0,IF to RR distance
+L2,72.2,15.2,IF to CR distance
+L2,5.47,0.84,Dorsal width
+L3,11.200000000000001,2.5,DREZ length
+L3,11.200000000000001,2.6,Seg.L at dorsal CE
+L3,31.099999999999998,3.5,Seg.L at BE
+L3,105.19999999999999,6.4,Inf.Art facet to CR distance
+L3,102.69999999999999,22.3,IF to RR distance
+L3,95.1,22.7,IF to CR distance
+L3,5.72,0.49,Dorsal width
+L4,11.6,1.1,DREZ length
+L4,12.5,2.4,Seg.L at dorsal CE
+L4,31.099999999999998,5.300000000000001,Seg.L at BE
+L4,116.30000000000001,4.699999999999999,Inf.Art facet to CR distance
+L4,115.39999999999999,13.100000000000001,IF to RR distance
+L4,106.19999999999999,15.600000000000001,IF to CR distance
+L4,5.54,0.55,Dorsal width
+L5,11.200000000000001,3.1,DREZ length
+L5,9.7,3.8,Seg.L at dorsal CE
+L5,27.0,4.2,Seg.L at BE
+L5,127.10000000000001,4.4,Inf.Art facet to CR distance
+L5,126.6,15.0,IF to RR distance
+L5,118.69999999999999,17.1,IF to CR distance
+L5,4.08,0.11,Dorsal width
