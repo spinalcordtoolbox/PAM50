@@ -71,16 +71,20 @@ print(f"Sum across percent segments: {total_sum}")
 # Open PAM50 spinal cord segmentation
 nii_spinalcord = nib.load("../template/PAM50_cord.nii.gz")
 
-# Create spinal segments
+# Create labeled spinal cord mask
 data_spinalsegments = nii_spinalcord.get_fdata()
+
+# Create a new array for the mid-point voxels, initialized with zeros
+data_midpoint = np.zeros(nii_spinalcord.get_fdata().shape)
 
 # Zero values above z_top
 data_spinalsegments[:, :, z_top:] = 0
 
 z_segment_top = z_top
 i_level = 1
-cumulative_percent = 0  # Cumulative percentage to accumulate segment lengths
+cumulative_percent = 0
 
+# Create labeled segmentation
 for level_info in percent_length_segment:
     level_name, level_percent = list(level_info.items())[0]
     cumulative_percent += level_percent
@@ -88,6 +92,9 @@ for level_info in percent_length_segment:
     desired_position = z_top - np.round(length_spinalcord * cumulative_percent / 100)
     # Modify spinal cord mask with spinal segment value
     data_spinalsegments[:, :, int(desired_position):int(z_segment_top)] *= i_level
+    # Calculate the mid-point of the current segment and set the voxel value
+    midpoint_z = (z_segment_top + desired_position) // 2
+    data_midpoint[70, 70, int(midpoint_z)] = list(level_info.values())[0]
     # Update location of the top of the next segment
     z_segment_top = desired_position
     # Update level
@@ -99,7 +106,10 @@ data_spinalsegments[:, :, z_bottom:int(z_segment_top)] *= (i_level - 1)
 # Save file
 # TODO: use proper dtype
 nii_spinalsegments = nib.Nifti1Image(data_spinalsegments, nii_spinalcord.affine)
-fname_out = "PAM50_spinal_levels.nii.gz"
-nib.save(nii_spinalsegments, fname_out)
+fname_out_levels = "PAM50_spinal_levels.nii.gz"
+nib.save(nii_spinalsegments, fname_out_levels)
+nii_spinalmidpoint = nib.Nifti1Image(data_midpoint, nii_spinalcord.affine)
+fname_out_midpoint = "PAM50_spinal_midpoint.nii.gz"
+nib.save(nii_spinalmidpoint, fname_out_midpoint)
 
-print(f"Done! 🎉 \nFile created: {fname_out}")
+print(f"Done! 🎉 \nFiles created: {fname_out_levels}, {fname_out_midpoint}")
