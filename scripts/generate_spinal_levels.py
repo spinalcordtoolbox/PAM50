@@ -28,7 +28,7 @@ length_spinalcord_mm = 0.5 * length_spinalcord
 # Build dictionary of spinal segment location based on Table 3 of Frostell et al. article
 percent_length_segment = [
     {"C1": 1.6},
-    {"C2": 2.2},  # modified from Frostell et al. to reach 100% percent
+    {"C2": 2.2},
     {"C3": 3.5},
     {"C4": 3.5},
     {"C5": 3.5},
@@ -61,15 +61,6 @@ percent_length_segment = [
 
 print(f"Number of segments: {len(percent_length_segment)}")
 
-# Create a DataFrame from the table data
-# df = pd.DataFrame(table_data, columns=["label", "value"])
-
-# Set the 'label' column as the index for quick access
-# df.set_index("label", inplace=True)
-
-# Now you can access the value corresponding to a label using loc:
-# encoded_data = df.loc["label1", "value"]
-
 # Verify that the sum of all relative length segment is 100
 total_sum = 0.0
 for item in percent_length_segment:
@@ -88,18 +79,22 @@ data_spinalsegments[:, :, z_top:] = 0
 
 z_segment_top = z_top
 i_level = 1
+cumulative_percent = 0  # Cumulative percentage to accumulate segment lengths
+
 for level_info in percent_length_segment:
     level_name, level_percent = list(level_info.items())[0]
-    # Compute lenght of the spinal segment
-    length_segment = np.uint8(length_spinalcord * level_percent / 100)
-    # Get the top and bottom coordinates of that segment
-    z_segment_bottom = z_segment_top - length_segment
+    cumulative_percent += level_percent
+    # Compute the desired absolute position (from the top) based on cumulative percentage
+    desired_position = z_top - np.round(length_spinalcord * cumulative_percent / 100)
     # Modify spinal cord mask with spinal segment value
-    data_spinalsegments[:, :, z_segment_bottom:z_segment_top] *= i_level
+    data_spinalsegments[:, :, int(desired_position):int(z_segment_top)] *= i_level
     # Update location of the top of the next segment
-    z_segment_top = z_segment_bottom
+    z_segment_top = desired_position
     # Update level
     i_level += 1
+
+# Ensure that the final segment reaches exactly to z_bottom
+data_spinalsegments[:, :, z_bottom:int(z_segment_top)] *= (i_level - 1)
 
 # Save file
 # TODO: use proper dtype
