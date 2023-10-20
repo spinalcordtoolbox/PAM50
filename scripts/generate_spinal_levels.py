@@ -94,7 +94,7 @@ for level_info in percent_length_segment:
     data_spinalsegments[:, :, int(desired_position):int(z_segment_top)] *= i_level
     # Calculate the mid-point of the current segment and set the voxel value
     midpoint_z = (z_segment_top + desired_position) // 2
-    data_midpoint[70, 70, int(midpoint_z)] = list(level_info.values())[0]
+    data_midpoint[70, 70, int(midpoint_z)] = i_level
     # Update location of the top of the next segment
     z_segment_top = desired_position
     # Update level
