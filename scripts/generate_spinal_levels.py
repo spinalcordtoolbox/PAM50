@@ -103,8 +103,11 @@ for level_info in percent_length_segment:
 # Ensure that the final segment reaches exactly to z_bottom
 data_spinalsegments[:, :, z_bottom:int(z_segment_top)] *= (i_level - 1)
 
+# Use dtype UINT8 for labels
+data_spinalsegments = data_spinalsegments.astype(np.uint8)
+data_midpoint = data_midpoint.astype(np.uint8)
+
 # Save file
-# TODO: use proper dtype
 nii_spinalsegments = nib.Nifti1Image(data_spinalsegments, nii_spinalcord.affine)
 fname_out_levels = "PAM50_spinal_levels.nii.gz"
 nib.save(nii_spinalsegments, fname_out_levels)
