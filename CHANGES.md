@@ -3,6 +3,26 @@
 ## 2023-02-15 (JV)
 - Added template/PAM50_rootlets.nii.gz. This file contains dorsal cervical (C2-C8) rootlets. The rootlets were automatically segmented using the r20240129 rootlets model (https://github.com/ivadomed/model-spinal-rootlets/releases/tag/r20240129). Then, the right side was manually adjusted (removing/adding a single voxel for some levels), and rootlets were symmetrized using code/symmetrize_cord_segmentation.py
 
+## 2023-10-23 (JCA)
+- Replace individual spinal level files with a singular `template/PAM50_spinal_levels.nii.gz` file based on Frostell et al. paper. (#18)
+- Update the pointwise `PAM50_spinal_midpoint.nii.gz` file to match the new spinal levels.
+
+## 2023-10-11 (JN)
+- Add cauda equinea label (`60`) to point label files for easier lumbar registration. (#27)
+
+## 2023-09-22 (JCA)
+- Several tweaks to the PAM50 template (#21):
+  - Add script that symmetrizes images.
+  - Add script to update the `PAM50_levels.nii.gz` file using the extended cord segmentation.
+  - Extend `PAM50_cord.nii.gz` down to L1/L2.
+  - Extend rostral/caudal coverage of the `PAM50_levels.nii.gz` file.
+
+## 2023-05-19 (JV)
+- Corrected the histology microstructure atlas (alignment with ICBM152 PAM50 space (#6), resampling to 0.2x0.2x0.5 resolution (#9))
+
+## 2022-05-27 (AF)
+- Added first draft of histology microstructure atlas. (#2)
+
 ## 2020-11-04 (JCA)
 - Updated template/PAM50_levels.nii.gz and template/PAM50_levels_continuous.nii.gz to match with template/PAM50_cord.nii.gz (Fixes https://github.com/neuropoly/spinalcordtoolbox/issues/2172).
 
