@@ -17,3 +17,5 @@
 13, spinal cord centerline, PAM50_centerline.nii.gz
 14, point-wise spinal level labels, PAM50_spinal_midpoint.nii.gz
 15, spinal cord mask with discrete spinal levels, PAM50_spinal_levels.nii.gz
+16, spinal dorsal nerve rootlets with discrete spinal levels, PAM50_rootlets.nii.gz
+17, spinal dorsal nerve rootlets center of mass with discrete spinal levels, PAM50_rootlets_midpoint.nii.gz
