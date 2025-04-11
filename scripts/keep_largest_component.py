@@ -9,7 +9,7 @@ Then, you can run the script:
     cd <THIS_REPO>
     python scripts/keep_largest_component.py -path atlas
 
-Then compare the original and modified images:
+The modified files are saved to the `atlas_tmp` folder. To compare the original and modified images you can run:
     for f in atlas_tmp/*[0-9][0-9].nii.gz;do fsleyes ${f/_tmp/} -cm green ${f} -cm blue-lightblue ${f/.nii/_diff.nii} -cm red-yellow;done
 
 Finally, you can copy the modified images to the original directory:
