@@ -81,6 +81,7 @@ def main(path: str) -> None:
             save_nifti(diff, img.affine, dtype, diff_path)
             #shutil.copy2(out_path, fpath)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-path", required=False, default="atlas", help="Directory with .nii.gz files")
