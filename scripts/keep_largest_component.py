@@ -39,6 +39,7 @@ def keep_largest_component(data: np.ndarray) -> np.ndarray:
     largest_label = (np.argmax(sizes) + 1)      # find the largest component
     return np.where(labels == largest_label, data, 0)   #  to avoid tiny rounding errors during multiplication with a bool mask
 
+
 def save_nifti(data: np.ndarray, affine: np.ndarray, dtype: np.dtype, out_path: Path) -> None:
     """
     Save the nii file with same datatype as the orig image.
