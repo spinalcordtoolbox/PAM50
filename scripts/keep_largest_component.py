@@ -2,7 +2,7 @@
 Keep the largest connected component for each atlas mask.
 
 You can use the SCT venv:
-    source ${SCT_DIR}/python/etc/profile.d/conda.sh                                                                                                                                                                                                                                                            (master|…1)
+    source ${SCT_DIR}/python/etc/profile.d/conda.sh
     conda activate venv_sct
 
 Then, you can run the script:
