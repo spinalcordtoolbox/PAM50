@@ -8,7 +8,8 @@
 % which we want to intergrate information on the white matter tracts
 
 %----------------------------- Dependencies -------------------------------
-% 1. MATLAB: Ensure Image Processing Toolbox is checked during installation.
+% 1. MATLAB: Ensure both Image Processing Toolbox and Signal 
+%         Processing Toolbox are checked during installation.
 %         (R2025a tested)
 %         See: https://www.mathworks.com/help/install/ug/install-products-with-internet-connection.html
 % 2. FSL: Download and install FSL (FMRIB Software Library).
@@ -303,7 +304,7 @@ disp(cmd); [status,result] = unix(cmd); if(status), error(result); end, disp(res
 
 % estimate diffeomorphic transformation
 cmd =['isct_antsRegistration --dimensionality 2 --initial-moving-transform '  affine_atlas ' ',...
-    '--transform SyN[0.1,3,0] --metric MeanSquares[' templateci_slice_ref_thresh ext ',' mask_nohd ext ',1,4] ',... 
+    '--transform SyN[0.1,3,0] --metric MeanSquares[' templateci_slice_ref_thresh ext ',' mask_nohd ext ',1,4] ',...
     '--convergence 100x10 --shrink-factors 4x1 --smoothing-sigmas 0x0mm ',...
     '--output [' prefix_ants ',' mask_nohd '_affine_warp' ext '] --collapse-output-transforms 1'];
 disp(cmd); [status,result] = unix(cmd); if(status), error(result); end, disp(result)
@@ -343,19 +344,19 @@ for label = 1:length(label_left)
     label_r = label+length(label_left);
     tract_atlas_g = [ 'tract_atlas_' num2str(label_l)];
     tract_atlas_d = [ 'tract_atlas_' num2str(label_r)];
-    
+
     cmd = ['isct_antsApplyTransforms -d 2 -i ' tract_atlas_g ext ' -o ' tract_atlas_g suffix_ants ext ' -t ' Warp_atlas ' '  affine_atlas ' -r ' templateci_slice_ref_thresh ext];
     disp(cmd); [status,result] = unix(cmd); if(status), error(result); end, disp(result)
-    
+
     cmd = ['isct_antsApplyTransforms -d 2 -i ' tract_atlas_d ext ' -o ' tract_atlas_d suffix_ants ext ' -t ' Warp_atlas ' '  affine_atlas ' -r ' templateci_slice_ref_thresh ext];
     disp(cmd); [status,result] = unix(cmd); if(status), error(result); end, disp(result)
-    
+
     tract_reg_g = [ 'tract_atlas_' num2str(label_l) suffix_ants];
     temp_g = read_avw(tract_reg_g);
-    
+
     tract_reg_d = [ 'tract_atlas_' num2str(label_r) suffix_ants];
     temp_d = read_avw(tract_reg_d);
-    
+
     % Replace isolated values with the mean of the adjacent values
     for i = 2:size(temp_g,1)-1
         for j = 2:size(temp_g,2)-1
@@ -365,7 +366,7 @@ for label = 1:length(label_left)
             end
         end
     end
-    
+
     for i = 2:size(temp_d,1)-1
         for j = 2:size(temp_d,2)-1
             test = (temp_d(i,j)==temp_d(i-1,j)) || (temp_d(i,j)==temp_d(i,j-1)) || (temp_d(i,j)==temp_d(i+1,j)) || (temp_d(i,j)==temp_d(i,j+1));
@@ -374,17 +375,17 @@ for label = 1:length(label_left)
             end
         end
     end
-    
+
     % Symmetry constraint for left and right tracts
     temp_sum = temp_g + temp_d;
     temp_sum_flip = temp_sum(end:-1:1,:);
     temp_sym = (temp_sum + temp_sum_flip) / 2;
-    
+
     temp_g(1:end/2,:) = 0;
     temp_g(1+end/2:end,:) = temp_sym(1+end/2:end,:);
     temp_d(1:end/2,:) = temp_sym(1:end/2,:);
     temp_d(1+end/2:end,:) = 0;
-    
+
     tractsHR{label_l}(:,:,num_slice_ref) = temp_g;
     tractsHR{label_r}(:,:,num_slice_ref) = temp_d;
 end
@@ -392,13 +393,13 @@ end
 % Apply tranform to the PVE tract files
 for label = length([label_left, label_right])+1:length(label_values)
     tract_atlas = [ 'tract_atlas_' num2str(label)];
-    
+
     cmd = ['isct_antsApplyTransforms -d 2 -i ' tract_atlas ext ' -o ' tract_atlas suffix_ants ext ' -t ' Warp_atlas ' '  affine_atlas ' -r ' templateci_slice_ref_thresh ext];
     disp(cmd); [status,result] = unix(cmd); if(status), error(result); end, disp(result)
-    
+
     tract_reg_g = [ 'tract_atlas_' num2str(label) suffix_ants];
     temp_g = read_avw(tract_reg_g);
-    
+
     % Replace isolated values with the mean of the adjacent values
     for i = 2:size(temp_g,1)-1
         for j = 2:size(temp_g,2)-1
@@ -408,7 +409,7 @@ for label = length([label_left, label_right])+1:length(label_values)
             end
         end
     end
-    
+
     tractsHR{label}(:,:,num_slice_ref) = temp_g;
 end
 
@@ -458,13 +459,13 @@ for iz = izref:nb_slices-1
     end
     % estimate transformation slice->slicenext
     cmd =['isct_antsRegistration --dimensionality 2 ',...
-        '--transform Affine[0.5] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',... 
+        '--transform Affine[0.5] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',...
         '--convergence 100x100 --shrink-factors 2x1 --smoothing-sigmas 1x0vox ',...
-        '--transform BSplineSyN[0.2,3] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',... 
+        '--transform BSplineSyN[0.2,3] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',...
         '--convergence 500x10 --shrink-factors 2x1 --smoothing-sigmas 1x0vox ',...
         '--output [' prefix_ants num2str(z_slice_ref) 'to' num2str(zslicenext) '_,' templatecit_slice_ref 'to' num2str(zslicenext) ext ']'];
 %     cmd =['isct_antsRegistration --dimensionality 2 ',...
-%         '--transform BSplineSyN[0.2,3] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',... 
+%         '--transform BSplineSyN[0.2,3] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',...
 %         '--convergence 500x10 --shrink-factors 2x1 --smoothing-sigmas 1x0vox ',...
 %         '--output [' prefix_ants num2str(z_slice_ref) 'to' num2str(zslicenext) '_,' templatecit_slice_ref 'to' num2str(zslicenext) ext ']'];
     disp(cmd); [status,result] = unix(cmd); if(status), error(result); end
@@ -497,9 +498,9 @@ for iz = izref:-1:2
     end
     % estimate transformation slice->slicenext
     cmd =['isct_antsRegistration --dimensionality 2 ',...
-        '--transform Affine[0.5] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',... 
+        '--transform Affine[0.5] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',...
         '--convergence 100x100 --shrink-factors 2x1 --smoothing-sigmas 1x0vox ',...
-        '--transform BSplineSyN[0.2,3] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',... 
+        '--transform BSplineSyN[0.2,3] --metric MeanSquares[' templatecit_slicenext ext ',' file_moving ',1,4] ',...
         '--convergence 500x10 --shrink-factors 2x1 --smoothing-sigmas 1x0vox ',...
         '--output [' prefix_ants num2str(z_slice_ref) 'to' num2str(zslicenext) '_,' templatecit_slice_ref 'to' num2str(zslicenext) ext ']'];
     disp(cmd); [status,result] = unix(cmd); if(status), error(result); end
@@ -525,7 +526,7 @@ for iz = 1:nb_slices
         % read warping field
         [warpx,dims,scales] = read_avw([warp_temp 'x' ext]);
         warpy = read_avw([warp_temp 'y' ext]);
-        % do the mean across x and y 
+        % do the mean across x and y
         warpx = (warpx - warpx(end:-1:1,:)) / 2;
         warpy = (warpy + warpy(end:-1:1,:)) / 2;
         % save
@@ -660,7 +661,7 @@ for iz = 1:nb_slices
 
             % Symmetry constraint for left and right tracts
             tractsHR{label}(:,:,numSlice) = temp_g;
-        end    
+        end
 
         % Move control files to control folder
         reg_slice_current = [templatecit_slice_ref suffix_ants num2str(zslice)];
@@ -668,7 +669,7 @@ for iz = 1:nb_slices
         movefile([atlas_slice suffix_ants ext], [path_out folder_ctrl]);
     else
         disp(['Reference slice: skipping this step.'])
-    end   
+    end
 end
 
 %% Interpolation between computed slices
