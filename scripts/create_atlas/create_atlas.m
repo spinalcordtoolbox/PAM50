@@ -8,17 +8,32 @@
 % which we want to intergrate information on the white matter tracts
 
 %----------------------------- Dependencies -------------------------------
-% Matlab dependencies:
-% - image processing toolbox functions
-% - m_normalize.m : normalization function
-% - dnsamplelin.m : function for downsampling by computing mean value for
-%   each region
-% - m_linear_interp.m
+% 1. MATLAB: Ensure Image Processing Toolbox is checked during installation.
+%         (R2025a tested)
+%         See: https://www.mathworks.com/help/install/ug/install-products-with-internet-connection.html
+% 2. FSL: Download and install FSL (FMRIB Software Library).
+%         (v6.0.7.17 tested)
+%         See: https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/index
+% 3. c3d: Download and install c3d (Convert3D).
+%         (Newest version failed (v1.4.2) -> Older version succeeded (v1.0.0))
+%         See: https://sourceforge.net/projects/c3d/
+% 4. ANTs: Download and install SCT, which contains the necessary ANTs scripts.
+%         (SCT v7.0 tested)
 %
-% Other dependencies: 
-% - FSL
-% - c3d
-% - ANTs
+% - Additionally, ensure the following scripts are in the working directory:
+%    * m_normalize.m : normalization function
+%    * dnsamplelin.m : function for downsampling by computing mean value for
+%                      each region
+%    * m_linear_interp.m
+%
+% - Additioanlly, ensure the following data files are present in ../raw_data:
+%    * PAM50_wm.nii.gz
+%    * atlas_grays_cerv_sym_correc_r6.png
+%    * atlas_grays_cerv_sym_correc_r6_label.txt
+%    * mask_grays_cerv_sym_correc_r5.png
+%
+%   You can get these files from the following link (preserved by GitHub):
+%   https://github.com/spinalcordtoolbox/spinalcordtoolbox/tree/1284a9b09766916cd685c77bfdc3bb2f68c07a98/dev/atlas/raw_data
 
 dbstop if error
 
