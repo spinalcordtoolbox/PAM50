@@ -14,4 +14,5 @@ sct_apply_transfo -i ~/Desktop/MNI-POLY-AMU/AMU15_G_sym.nii.gz -d PAM50_t2.nii.g
 # TODO: remove hardcoding of paths
 python3 ~/code/PAM50/scripts/symmetrize_cord_segmentation.py -i AMU15_G_sym_reg.nii.gz --dtype float32 --mode average
 python3 ~/code/PAM50/scripts/symmetrize_cord_segmentation.py -i AMU15_T2star_sym_reg.nii.gz --dtype float32 --mode average
-
+# Remove negatives values on the T2*-weighted image by thresholding, and output as UINT16 type (like for PAM50_t2)
+sct_maths -i AMU15_T2star_sym_reg_sym.nii.gz -thr 0 -type uint16 -o AMU15_T2star_sym_reg_sym_thr.nii.gz
