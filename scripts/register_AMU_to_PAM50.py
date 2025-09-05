@@ -43,7 +43,7 @@ LABEL_PAM = (70, 70, 959, 1)
 # I/O
 OUTDIR = Path("./out")
 QCDIR  = Path("./qc")
-EXTEND_TO_CORD = True  # Copy edge slices AFTER step-0, in PAM50 space, before step-1
+
 # Per-slice ants params
 ANTS_RIGID = [
     "-d", "2",
@@ -146,13 +146,13 @@ def main():
     workdir = OUTDIR / "work"
     workdir.mkdir(parents=True, exist_ok=True)
 
-    # label-based registration (Tx_Ty_Tz) followed by slicereg
+    # Create labels for step-0
     label_amu = (workdir / "label_AMU.nii.gz").resolve()
     label_pam = (workdir / "label_PAM50.nii.gz").resolve()
     run(["sct_label_utils", "-i", AMU_T2S, "-create", ",".join(map(str, LABEL_AMU)), "-o", label_amu])
     run(["sct_label_utils", "-i", PAM50_T2, "-create", ",".join(map(str, LABEL_PAM)), "-o", label_pam])
 
-    # Run only step=0 to get initial warp
+    # label-based registration (Tx_Ty_Tz) followed by slicereg
     cwd = os.getcwd()
     os.chdir(workdir)
     try:
@@ -190,15 +190,11 @@ def main():
     run(["sct_apply_transfo", "-i", AMU_GM,  "-d", PAM50_T2, "-w", warp0, "-x", "linear", "-o", amu_g_step0])
 
     # Extend top/bottom mask to cover the full PAM50 space ----
-    if EXTEND_TO_CORD:
-        print("==> Extending PAM50-space AMU images along Z to match PAM50 cord segmentation extent.")
-        amu_t2s_reg = workdir / (AMU_T2S.stem + "_step0_ext.nii.gz")
-        amu_g_reg   = workdir / (AMU_GM.stem  + "_step0_ext.nii.gz")
-        copy_edge_slices_to_match(amu_t2s_step0, PAM50_SEG, amu_t2s_reg)
-        copy_edge_slices_to_match(amu_g_step0,  PAM50_SEG, amu_g_reg)
-    else:
-        amu_t2s_reg = amu_t2s_step0
-        amu_g_reg   = amu_g_step0
+    print("==> Extending PAM50-space AMU images along Z to match PAM50 cord segmentation extent.")
+    amu_t2s_step0_ext = workdir / (AMU_T2S.stem + "_step0_ext.nii.gz")
+    amu_g_step0_ext   = workdir / (AMU_GM.stem  + "_step0_ext.nii.gz")
+    copy_edge_slices_to_match(amu_t2s_step0, PAM50_SEG, amu_t2s_step0_ext)
+    copy_edge_slices_to_match(amu_g_step0,  PAM50_SEG, amu_g_step0_ext)
 
     # ---------- Per-slice refinement ONLY on truly extended slices ----------
     def nz_mask_per_slice_data(arr):
@@ -210,7 +206,7 @@ def main():
 
     # Extended detection via step0 vs step0_ext (GM)
     mask_step0 = nz_mask_per_slice(amu_g_step0)
-    mask_ext   = nz_mask_per_slice(amu_g_reg)
+    mask_ext   = nz_mask_per_slice(amu_g_step0_ext)
     Z = mask_ext.shape[0]
     extended = np.logical_and(~mask_step0, mask_ext)
     nz_indices = np.where(mask_step0)[0]
@@ -228,8 +224,8 @@ def main():
     # Load baseline registered 3D outputs and the extended volumes for picking slices
     ref_fix_seg = nib.load(str(PAM50_SEG))
     fix_seg_3d = ref_fix_seg.get_fdata()
-    gm_ext_3d  = nib.load(str(amu_g_reg)).get_fdata()
-    t2s_ext_3d = nib.load(str(amu_t2s_reg)).get_fdata()
+    gm_ext_3d  = nib.load(str(amu_g_step0_ext)).get_fdata()
+    t2s_ext_3d = nib.load(str(amu_t2s_step0_ext)).get_fdata()
 
     # Helper to run ants on a single slice and overwrite in the baseline outputs
     def ants_slice_refine(z, prev_mat=None):
@@ -281,14 +277,14 @@ def main():
         t_w = load2d(out_t)  # (X,Y)
 
         # Overwrite slice z in the *baseline* registered 3-D outputs
-        ref_g_img = nib.load(str(amu_g_reg))
-        ref_t_img = nib.load(str(amu_t2s_reg))
+        ref_g_img = nib.load(str(amu_g_step0_ext))
+        ref_t_img = nib.load(str(amu_t2s_step0_ext))
         g3d = ref_g_img.get_fdata()
         t3d = ref_t_img.get_fdata()
         g3d[:, :, z] = g_w
         t3d[:, :, z] = t_w
-        nib.Nifti1Image(g3d, ref_g_img.affine, ref_g_img.header).to_filename(str(amu_g_reg))
-        nib.Nifti1Image(t3d, ref_t_img.affine, ref_t_img.header).to_filename(str(amu_t2s_reg))
+        nib.Nifti1Image(g3d, ref_g_img.affine, ref_g_img.header).to_filename(str(amu_g_step0_ext))
+        nib.Nifti1Image(t3d, ref_t_img.affine, ref_t_img.header).to_filename(str(amu_t2s_step0_ext))
 
         return mat
 
