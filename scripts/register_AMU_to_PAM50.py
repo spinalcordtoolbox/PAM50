@@ -44,16 +44,6 @@ LABEL_PAM = (70, 70, 959, 1)
 OUTDIR = Path("./out")
 QCDIR  = Path("./qc")
 
-# Per-slice ants params
-ANTS_RIGID = [
-    "-d", "2",
-    "-t", "Rigid[0.1]",
-    "-m", "MeanSquares[{fixed},{moving},1,4]",
-    "-c", "50x20",
-    "-s", "1x0",
-    "-f", "2x1",
-]
-
 HERE = Path(__file__).resolve().parent
 SYM_SCRIPT = HERE / "symmetrize_cord_segmentation.py"
 
@@ -249,7 +239,14 @@ def main():
         out_prefix = workdir / f"ants_z{z:04d}_"
         cmd = ["isct_antsRegistration",
             "-d", "2",
+            # Stage 1: rigid
             "-t", "Rigid[0.1]",
+            "-m", f"MeanSquares[{fix},{mov_g},1,4]",
+            "-c", "50x20",
+            "-s", "1x0",
+            "-f", "2x1",
+            # Stage 2: bsplineSyN non-linear refinement
+            "-t", "BSplineSyN[0.1,26,0,3]",
             "-m", f"MeanSquares[{fix},{mov_g},1,4]",
             "-c", "50x20",
             "-s", "1x0",
@@ -262,15 +259,19 @@ def main():
         mat = Path(str(out_prefix) + "0GenericAffine.mat")
         if not mat.exists():
             raise FileNotFoundError(f"ants transform not found for slice z={z}: {mat}")
+        warp = Path(str(out_prefix) + "1Warp.nii.gz")
+        if not warp.exists():
+            raise FileNotFoundError(f"ants transform not found for slice z={z}: {warp}")
 
         # Apply to GM (NN) and T2* (linear) -- ANTs will write 2-D images
         out_g = workdir / f"amu_g_refined_z{z:04d}.nii.gz"
         out_t = workdir / f"amu_t2s_refined_z{z:04d}.nii.gz"
         run(["isct_antsApplyTransforms", "-d", "2",
-            "-i", mov_g, "-r", fix, "-t", mat, "-o", out_g, "-n", "NearestNeighbor"])
+            "-i", mov_g, "-r", fix, "-t", mat, warp, "-o", out_g, "-n", "Linear"])
         run(["isct_antsApplyTransforms", "-d", "2",
-            "-i", mov_t, "-r", fix, "-t", mat, "-o", out_t, "-n", "Linear"])
+            "-i", mov_t, "-r", fix, "-t", mat, warp, "-o", out_t, "-n", "Linear"])
         # Copy header info (spacing) from input to output
+        # TODO replace code below with nibabel for faster execution
         run(["sct_image", "-i", str(fix), "-copy-header", str(out_g), "-o", str(out_g)])
         run(["sct_image", "-i", str(fix), "-copy-header", str(out_t), "-o", str(out_t)])
 
