@@ -234,13 +234,16 @@ def main():
         mov_g = workdir / f"mov_g_ext_z{z:04d}.nii.gz"
         mov_t = workdir / f"mov_t2s_ext_z{z:04d}.nii.gz"
 
-        fix_slice = nib.load(str(PAM50_SEG)).get_fdata()[:, :, z]
+        fix_slice = nib.load(str(PAM50_SEG)).get_fdata()
         gm_ext_3d = nib.load(str(amu_g_step0_ext)).get_fdata()
         t2_ext_3d = nib.load(str(amu_t2s_step0_ext)).get_fdata()
-        # write as single-slice 3D (X,Y,1) so ANTs spacing/origin stay consistent
-        nib.Nifti1Image(fix_slice[:, :, None], nib.load(str(PAM50_SEG)).affine, nib.load(str(PAM50_SEG)).header).to_filename(str(fix))
-        nib.Nifti1Image(gm_ext_3d[:, :, z][:, :, None], nib.load(str(amu_g_step0_ext)).affine, nib.load(str(amu_g_step0_ext)).header).to_filename(str(mov_g))
-        nib.Nifti1Image(t2_ext_3d[:, :, z][:, :, None], nib.load(str(amu_t2s_step0_ext)).affine, nib.load(str(amu_t2s_step0_ext)).header).to_filename(str(mov_t))
+
+        # write as single-slice 2D
+        # aff2d = affine_3d_to_2d(nib.load(str(PAM50_SEG)).affine)
+        # nib.Nifti1Image(fix_slice[:, :, z], aff2d, header_3d_to_2d(nib.load(str(PAM50_SEG)).header, np.shape(fix_slice[:, :, z]), aff2d)).to_filename(str(fix))
+        nib.Nifti1Image(fix_slice[:, :, z], nib.load(str(PAM50_SEG)).affine, nib.load(str(PAM50_SEG)).header).to_filename(str(fix))
+        nib.Nifti1Image(gm_ext_3d[:, :, z], nib.load(str(amu_g_step0_ext)).affine, nib.load(str(amu_g_step0_ext)).header).to_filename(str(mov_g))
+        nib.Nifti1Image(t2_ext_3d[:, :, z], nib.load(str(amu_t2s_step0_ext)).affine, nib.load(str(amu_t2s_step0_ext)).header).to_filename(str(mov_t))
 
         # Run 2D rigid ANTs (use previous slice’s affine as init if provided)
         out_prefix = workdir / f"ants_z{z:04d}_"
@@ -267,6 +270,9 @@ def main():
             "-i", mov_g, "-r", fix, "-t", mat, "-o", out_g, "-n", "NearestNeighbor"])
         run(["isct_antsApplyTransforms", "-d", "2",
             "-i", mov_t, "-r", fix, "-t", mat, "-o", out_t, "-n", "Linear"])
+        # Copy header info (spacing) from input to output
+        run(["sct_image", "-i", str(fix), "-copy-header", str(out_g), "-o", str(out_g)])
+        run(["sct_image", "-i", str(fix), "-copy-header", str(out_t), "-o", str(out_t)])
 
         # Load refined 2-D outputs robustly (2-D or (X,Y,1))
         def load2d(path):
