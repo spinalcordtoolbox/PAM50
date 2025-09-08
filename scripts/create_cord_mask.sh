@@ -10,6 +10,8 @@ cd $SCT_DIR/data/PAM50/template
 # Create spinal cord segmentation using contrast-agnostic model (model_contrast_agnostic_20250123)
 sct_deepseg spinalcord -i PAM50_t2.nii.gz -o PAM50_cord.nii.gz
 
+# Remove JSON
+rm PAM50_cord.json
+
 # Symmetrize the segmentation
-python3 ~/code/PAM50/scripts/symmetrize_cord_segmentation.py -i PAM50_cord.nii.gz --dtype uint8 --mode majority
-mv PAM50_cord_sym.nii.gz PAM50_cord.nii.gz
+python3 "$SCRIPT_DIR/symmetrize_cord_segmentation.py" -i PAM50_cord.nii.gz --dtype uint8 --mode average -o PAM50_cord.nii.gz
