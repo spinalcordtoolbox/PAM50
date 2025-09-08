@@ -34,7 +34,7 @@ AMU_T2S = Path(os.path.expanduser("~/Desktop/MNI-POLY-AMU/AMU15_T2star_sym.nii.g
 AMU_GM  = Path(os.path.expanduser("~/Desktop/MNI-POLY-AMU/AMU15_GW_sym.nii.gz"))  # GM+WM segmentation (moving seg)
 
 PAM50_T2  = Path(f"{SCT_DIR}/data/PAM50/template/PAM50_t2.nii.gz")
-PAM50_SEG = Path(f"{SCT_DIR}/data/PAM50/template/PAM50_t2_seg.nii.gz")
+PAM50_SEG = Path(f"{SCT_DIR}/data/PAM50/template/PAM50_cord.nii.gz")
 
 # Label coordinates (x,y,z,val) for step-0 label-based alignment
 LABEL_AMU = (75, 75, 965, 1)
