@@ -9,7 +9,7 @@ Pipeline:
   3) Extend AMU volumes in PAM50 space by copying top/bottom slices to match PAM50 cord extent.
   4) Global slicewise registration (SCT) on extended volumes:
        sct_register_multimodal step=1, type=seg, algo=slicereg, poly=2 (standard coarse alignment)
-  5) Apply global warp (warp1 ∘ warp0) to produce baseline registered AMU_T2* and AMU_GM.
+  5) Apply global warp (warp1 ∘ file_warp0) to produce baseline registered AMU_T2* and FILE_AMU_GM.
   6) Detect extended Z-slices and run **per-slice isct_antsRegistration** ONLY on those slices
      "de proche en proche", initializing each slice with previous transform.
      Overwrite the corresponding slices in the baseline outputs.
@@ -30,19 +30,19 @@ import numpy as np
 # CONFIG (edit once)
 # =========================
 SCT_DIR = os.environ.get("SCT_DIR", "/opt/sct")  # Adjust if not using env var
-AMU_T2S = Path(os.path.expanduser("~/Desktop/MNI-POLY-AMU/AMU15_T2star_sym.nii.gz"))
-AMU_GM  = Path(os.path.expanduser("~/Desktop/MNI-POLY-AMU/AMU15_GW_sym.nii.gz"))  # GM+WM segmentation (moving seg)
+FILE_AMU_T2S = Path(os.path.expanduser("~/Desktop/MNI-POLY-AMU/AMU15_T2star_sym.nii.gz"))
+FILE_AMU_GM  = Path(os.path.expanduser("~/Desktop/MNI-POLY-AMU/AMU15_GW_sym.nii.gz"))  # GM+WM segmentation (moving seg)
 
-PAM50_T2  = Path(f"{SCT_DIR}/data/PAM50/template/PAM50_t2.nii.gz")
-PAM50_SEG = Path(f"{SCT_DIR}/data/PAM50/template/PAM50_cord.nii.gz")
+FILE_PAM50_T2  = Path(f"{SCT_DIR}/data/PAM50/template/PAM50_t2.nii.gz")
+FILE_PAM50_SEG = Path(f"{SCT_DIR}/data/PAM50/template/PAM50_cord.nii.gz")
 
 # Label coordinates (x,y,z,val) for step-0 label-based alignment
 LABEL_AMU = (75, 75, 965, 1)
 LABEL_PAM = (70, 70, 959, 1)
 
 # I/O
-OUTDIR = Path("./out")
-QCDIR  = Path("./qc")
+OUTDIR = Path("./results")
+QCDIR  = (OUTDIR / "qc").resolve()
 
 HERE = Path(__file__).resolve().parent
 SYM_SCRIPT = HERE / "symmetrize_cord_segmentation.py"
@@ -130,6 +130,7 @@ def copy_edge_slices_to_match(moving_path: Path, ref_path: Path, out_path: Path)
     nib.Nifti1Image(data_ext, img_m.affine, img_m.header).to_filename(str(out_path))
     return out_path
 
+
 # ==========================================================================
 # SCRIPT STARTS HERE
 # ==========================================================================
@@ -138,25 +139,25 @@ OUTDIR.mkdir(parents=True, exist_ok=True)
 QCDIR.mkdir(parents=True, exist_ok=True)
 workdir = OUTDIR / "work"
 workdir.mkdir(parents=True, exist_ok=True)
-
-# Create labels for step-0
-label_amu = (workdir / "label_AMU.nii.gz").resolve()
-label_pam = (workdir / "label_PAM50.nii.gz").resolve()
-run(["sct_label_utils", "-i", AMU_T2S, "-create", ",".join(map(str, LABEL_AMU)), "-o", label_amu])
-run(["sct_label_utils", "-i", PAM50_T2, "-create", ",".join(map(str, LABEL_PAM)), "-o", label_pam])
-
-# label-based registration (Tx_Ty_Tz) followed by slicereg
 cwd = os.getcwd()
 os.chdir(workdir)
+
+# Create pointwise labels to bring AMU template in PAM50 space
+file_label_amu = Path(f"label_AMU.nii.gz")
+file_label_pam = Path(f"label_PAM50.nii.gz")
+run(["sct_label_utils", "-i", FILE_AMU_T2S, "-create", ",".join(map(str, LABEL_AMU)), "-o", file_label_amu])
+run(["sct_label_utils", "-i", FILE_PAM50_T2, "-create", ",".join(map(str, LABEL_PAM)), "-o", file_label_pam])
+
+# Label-based registration (Tx_Ty_Tz), followed by non-linear registration using cord segmentation
 try:
     run([
         "sct_register_multimodal",
-        "-i", AMU_T2S,
-        "-iseg", AMU_GM,
-        "-ilabel", label_amu,
-        "-d", PAM50_T2,
-        "-dseg", PAM50_SEG,
-        "-dlabel", label_pam,
+        "-i", FILE_AMU_T2S,
+        "-iseg", FILE_AMU_GM,
+        "-ilabel", file_label_amu,
+        "-d", FILE_PAM50_T2,
+        "-dseg", FILE_PAM50_SEG,
+        "-dlabel", file_label_pam,
         "-param", "step=0,type=label,dof=Tx_Ty_Tz:step=1,type=seg,algo=slicereg,poly=2",
         "-qc", QCDIR,
     ])
@@ -164,30 +165,24 @@ finally:
     os.chdir(cwd)
 
 # Locate warp
-srcbase0 = Path(AMU_T2S).name.replace(".nii.gz","")
-dstbase  = Path(PAM50_T2).name.replace(".nii.gz","")
-warp0 = workdir / f"warp_{srcbase0}2{dstbase}.nii.gz"
-if not warp0.exists():
-    candidates = list(workdir.glob(f"warp_*2{dstbase}.nii.gz"))
-    if len(candidates) == 1:
-        warp0 = candidates[0]
-    elif len(candidates) > 1:
-        warp0 = max(candidates, key=lambda p: p.stat().st_mtime)
-    else:
-        raise FileNotFoundError("Could not find step-0 warp")
+srcbase0 = Path(FILE_AMU_T2S).name.replace(".nii.gz","")
+dstbase  = Path(FILE_PAM50_T2).name.replace(".nii.gz","")
+file_warp0 = Path(f"warp_{srcbase0}2{dstbase}.nii.gz")
+if not file_warp0.exists():
+    raise FileNotFoundError("Could not find {file_warp0}")
 
 # Apply warp to AMU images (now in PAM50 space)
-amu_t2s_step0 = workdir / (AMU_T2S.stem + "_step0.nii.gz")
-amu_g_step0   = workdir / (AMU_GM.stem  + "_step0.nii.gz")
-run(["sct_apply_transfo", "-i", AMU_T2S, "-d", PAM50_T2, "-w", warp0, "-x", "linear", "-o", amu_t2s_step0])
-run(["sct_apply_transfo", "-i", AMU_GM,  "-d", PAM50_T2, "-w", warp0, "-x", "linear", "-o", amu_g_step0])
+amu_t2s_step0 = workdir / (FILE_AMU_T2S.stem + "_step0.nii.gz")
+amu_g_step0   = workdir / (FILE_AMU_GM.stem  + "_step0.nii.gz")
+run(["sct_apply_transfo", "-i", FILE_AMU_T2S, "-d", FILE_PAM50_T2, "-w", file_warp0, "-x", "linear", "-o", amu_t2s_step0])
+run(["sct_apply_transfo", "-i", FILE_AMU_GM,  "-d", FILE_PAM50_T2, "-w", file_warp0, "-x", "linear", "-o", amu_g_step0])
 
 # Extend top/bottom mask to cover the full PAM50 space ----
 print("==> Extending PAM50-space AMU images along Z to match PAM50 cord segmentation extent.")
-amu_t2s_step0_ext = workdir / (AMU_T2S.stem + "_step0_ext.nii.gz")
-amu_g_step0_ext   = workdir / (AMU_GM.stem  + "_step0_ext.nii.gz")
-copy_edge_slices_to_match(amu_t2s_step0, PAM50_SEG, amu_t2s_step0_ext)
-copy_edge_slices_to_match(amu_g_step0,  PAM50_SEG, amu_g_step0_ext)
+amu_t2s_step0_ext = workdir / (FILE_AMU_T2S.stem + "_step0_ext.nii.gz")
+amu_g_step0_ext   = workdir / (FILE_AMU_GM.stem  + "_step0_ext.nii.gz")
+copy_edge_slices_to_match(amu_t2s_step0, FILE_PAM50_SEG, amu_t2s_step0_ext)
+copy_edge_slices_to_match(amu_g_step0,  FILE_PAM50_SEG, amu_g_step0_ext)
 
 # ---------- Per-slice refinement ONLY on truly extended slices ----------
 def nz_mask_per_slice_data(arr):
@@ -215,7 +210,7 @@ print(f"Bottom extended slices: {bottom_ext.tolist()}")
 print(f"Top extended slices: {top_ext.tolist()}")
 
 # Load baseline registered 3D outputs and the extended volumes for picking slices
-ref_fix_seg = nib.load(str(PAM50_SEG))
+ref_fix_seg = nib.load(str(FILE_PAM50_SEG))
 fix_seg_3d = ref_fix_seg.get_fdata()
 gm_ext_3d  = nib.load(str(amu_g_step0_ext)).get_fdata()
 t2s_ext_3d = nib.load(str(amu_t2s_step0_ext)).get_fdata()
@@ -227,14 +222,14 @@ def ants_slice_refine(z, prev_mat=None):
     mov_g = workdir / f"mov_g_ext_z{z:04d}.nii.gz"
     mov_t = workdir / f"mov_t2s_ext_z{z:04d}.nii.gz"
 
-    fix_slice = nib.load(str(PAM50_SEG)).get_fdata()
+    fix_slice = nib.load(str(FILE_PAM50_SEG)).get_fdata()
     gm_ext_3d = nib.load(str(amu_g_step0_ext)).get_fdata()
     t2_ext_3d = nib.load(str(amu_t2s_step0_ext)).get_fdata()
 
     # write as single-slice 2D
-    # aff2d = affine_3d_to_2d(nib.load(str(PAM50_SEG)).affine)
-    # nib.Nifti1Image(fix_slice[:, :, z], aff2d, header_3d_to_2d(nib.load(str(PAM50_SEG)).header, np.shape(fix_slice[:, :, z]), aff2d)).to_filename(str(fix))
-    nib.Nifti1Image(fix_slice[:, :, z], nib.load(str(PAM50_SEG)).affine, nib.load(str(PAM50_SEG)).header).to_filename(str(fix))
+    # aff2d = affine_3d_to_2d(nib.load(str(FILE_PAM50_SEG)).affine)
+    # nib.Nifti1Image(fix_slice[:, :, z], aff2d, header_3d_to_2d(nib.load(str(FILE_PAM50_SEG)).header, np.shape(fix_slice[:, :, z]), aff2d)).to_filename(str(fix))
+    nib.Nifti1Image(fix_slice[:, :, z], nib.load(str(FILE_PAM50_SEG)).affine, nib.load(str(FILE_PAM50_SEG)).header).to_filename(str(fix))
     nib.Nifti1Image(gm_ext_3d[:, :, z], nib.load(str(amu_g_step0_ext)).affine, nib.load(str(amu_g_step0_ext)).header).to_filename(str(mov_g))
     nib.Nifti1Image(t2_ext_3d[:, :, z], nib.load(str(amu_t2s_step0_ext)).affine, nib.load(str(amu_t2s_step0_ext)).header).to_filename(str(mov_t))
 
@@ -325,7 +320,7 @@ run(["sct_maths", "-i", amu_t2s_sym, "-thr", "0", "-type", "uint16", "-o", amu_t
 
 print("\n=== Outputs ===")
 print(f"QC dir:               {QCDIR}")
-print(f"Step-0 warp:          {warp0}")
+print(f"Step-0 warp:          {file_warp0}")
 print(f"Step-1 warp:          {warp1}")
 print(f"AMU GM reg:           {amu_g_reg}")
 print(f"AMU GM sym:           {amu_g_sym}")
