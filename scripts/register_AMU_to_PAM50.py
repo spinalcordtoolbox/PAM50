@@ -149,20 +149,20 @@ run(["sct_label_utils", "-i", FILE_AMU_T2S, "-create", ",".join(map(str, LABEL_A
 run(["sct_label_utils", "-i", FILE_PAM50_T2, "-create", ",".join(map(str, LABEL_PAM)), "-o", file_label_pam])
 
 # Label-based registration (Tx_Ty_Tz), followed by non-linear registration using cord segmentation
-try:
-    run([
-        "sct_register_multimodal",
-        "-i", FILE_AMU_T2S,
-        "-iseg", FILE_AMU_GM,
-        "-ilabel", file_label_amu,
-        "-d", FILE_PAM50_T2,
-        "-dseg", FILE_PAM50_SEG,
-        "-dlabel", file_label_pam,
-        "-param", "step=0,type=label,dof=Tx_Ty_Tz:step=1,type=seg,algo=slicereg,poly=2",
-        "-qc", QCDIR,
-    ])
-finally:
-    os.chdir(cwd)
+run([
+    "sct_register_multimodal",
+    "-i", FILE_AMU_T2S,
+    "-iseg", FILE_AMU_GM,
+    "-ilabel", file_label_amu,
+    "-d", FILE_PAM50_T2,
+    "-dseg", FILE_PAM50_SEG,
+    "-dlabel", file_label_pam,
+    "-param", "step=0,type=label,dof=Tx_Ty_Tz:step=1,type=seg,algo=slicereg,poly=2",
+    "-qc", QCDIR,
+])
+file_amu_t2s_step0 = Path(FILE_AMU_T2S.name.removesuffix('.nii.gz') + "_step0.nii.gz")
+# Rename for clarity
+os.rename(Path(FILE_AMU_T2S.name.removesuffix('.nii.gz') + "_reg.nii.gz"), file_amu_t2s_step0)
 
 # Locate warp
 srcbase0 = Path(FILE_AMU_T2S).name.replace(".nii.gz","")
@@ -171,19 +171,19 @@ file_warp0 = Path(f"warp_{srcbase0}2{dstbase}.nii.gz")
 if not file_warp0.exists():
     raise FileNotFoundError("Could not find {file_warp0}")
 
-# Apply warp to AMU images (now in PAM50 space)
-amu_t2s_step0 = workdir / (FILE_AMU_T2S.stem + "_step0.nii.gz")
-amu_g_step0   = workdir / (FILE_AMU_GM.stem  + "_step0.nii.gz")
-run(["sct_apply_transfo", "-i", FILE_AMU_T2S, "-d", FILE_PAM50_T2, "-w", file_warp0, "-x", "linear", "-o", amu_t2s_step0])
-run(["sct_apply_transfo", "-i", FILE_AMU_GM,  "-d", FILE_PAM50_T2, "-w", file_warp0, "-x", "linear", "-o", amu_g_step0])
+# Apply warp to AMU cord segmentation
+file_amu_g_step0   = Path(FILE_AMU_GM.name.removesuffix('.nii.gz') + "_step0.nii.gz")
+run(["sct_apply_transfo", "-i", FILE_AMU_GM,  "-d", FILE_PAM50_T2, "-w", file_warp0, "-x", "linear", "-o", file_amu_g_step0])
 
-# Extend top/bottom mask to cover the full PAM50 space ----
+# Extend top/bottom mask to cover the full PAM50 space
 print("==> Extending PAM50-space AMU images along Z to match PAM50 cord segmentation extent.")
-amu_t2s_step0_ext = workdir / (FILE_AMU_T2S.stem + "_step0_ext.nii.gz")
-amu_g_step0_ext   = workdir / (FILE_AMU_GM.stem  + "_step0_ext.nii.gz")
-copy_edge_slices_to_match(amu_t2s_step0, FILE_PAM50_SEG, amu_t2s_step0_ext)
-copy_edge_slices_to_match(amu_g_step0,  FILE_PAM50_SEG, amu_g_step0_ext)
+file_amu_t2s_step0_ext = Path(file_amu_t2s_step0.name.removesuffix('.nii.gz') + "_ext.nii.gz")
+file_amu_g_step0_ext   = Path(file_amu_g_step0.name.removesuffix('.nii.gz') + "_ext.nii.gz")
+copy_edge_slices_to_match(file_amu_t2s_step0, FILE_PAM50_SEG, file_amu_t2s_step0_ext)
+copy_edge_slices_to_match(file_amu_g_step0,  FILE_PAM50_SEG, file_amu_g_step0_ext)
 
+# TODO: the code below can be simplified a lot, if we don't care about the "truly extended" slices.
+# Also, we might replace the bottom extension with actual concatenation of another set of images.
 # ---------- Per-slice refinement ONLY on truly extended slices ----------
 def nz_mask_per_slice_data(arr):
     Z = arr.shape[2]
@@ -193,8 +193,8 @@ def nz_mask_per_slice_data(arr):
     return mask
 
 # Extended detection via step0 vs step0_ext (GM)
-mask_step0 = nz_mask_per_slice(amu_g_step0)
-mask_ext   = nz_mask_per_slice(amu_g_step0_ext)
+mask_step0 = nz_mask_per_slice(file_amu_g_step0)
+mask_ext   = nz_mask_per_slice(file_amu_g_step0_ext)
 Z = mask_ext.shape[0]
 extended = np.logical_and(~mask_step0, mask_ext)
 nz_indices = np.where(mask_step0)[0]
@@ -212,8 +212,8 @@ print(f"Top extended slices: {top_ext.tolist()}")
 # Load baseline registered 3D outputs and the extended volumes for picking slices
 ref_fix_seg = nib.load(str(FILE_PAM50_SEG))
 fix_seg_3d = ref_fix_seg.get_fdata()
-gm_ext_3d  = nib.load(str(amu_g_step0_ext)).get_fdata()
-t2s_ext_3d = nib.load(str(amu_t2s_step0_ext)).get_fdata()
+gm_ext_3d  = nib.load(str(file_amu_g_step0_ext)).get_fdata()
+t2s_ext_3d = nib.load(str(file_amu_t2s_step0_ext)).get_fdata()
 
 # Helper to run ants on a single slice and overwrite in the baseline outputs
 def ants_slice_refine(z, prev_mat=None):
@@ -223,15 +223,15 @@ def ants_slice_refine(z, prev_mat=None):
     mov_t = workdir / f"mov_t2s_ext_z{z:04d}.nii.gz"
 
     fix_slice = nib.load(str(FILE_PAM50_SEG)).get_fdata()
-    gm_ext_3d = nib.load(str(amu_g_step0_ext)).get_fdata()
-    t2_ext_3d = nib.load(str(amu_t2s_step0_ext)).get_fdata()
+    gm_ext_3d = nib.load(str(file_amu_g_step0_ext)).get_fdata()
+    t2_ext_3d = nib.load(str(file_amu_t2s_step0_ext)).get_fdata()
 
     # write as single-slice 2D
     # aff2d = affine_3d_to_2d(nib.load(str(FILE_PAM50_SEG)).affine)
     # nib.Nifti1Image(fix_slice[:, :, z], aff2d, header_3d_to_2d(nib.load(str(FILE_PAM50_SEG)).header, np.shape(fix_slice[:, :, z]), aff2d)).to_filename(str(fix))
     nib.Nifti1Image(fix_slice[:, :, z], nib.load(str(FILE_PAM50_SEG)).affine, nib.load(str(FILE_PAM50_SEG)).header).to_filename(str(fix))
-    nib.Nifti1Image(gm_ext_3d[:, :, z], nib.load(str(amu_g_step0_ext)).affine, nib.load(str(amu_g_step0_ext)).header).to_filename(str(mov_g))
-    nib.Nifti1Image(t2_ext_3d[:, :, z], nib.load(str(amu_t2s_step0_ext)).affine, nib.load(str(amu_t2s_step0_ext)).header).to_filename(str(mov_t))
+    nib.Nifti1Image(gm_ext_3d[:, :, z], nib.load(str(file_amu_g_step0_ext)).affine, nib.load(str(file_amu_g_step0_ext)).header).to_filename(str(mov_g))
+    nib.Nifti1Image(t2_ext_3d[:, :, z], nib.load(str(file_amu_t2s_step0_ext)).affine, nib.load(str(file_amu_t2s_step0_ext)).header).to_filename(str(mov_t))
 
     # Run 2D rigid ANTs (use previous slice’s affine as init if provided)
     out_prefix = workdir / f"ants_z{z:04d}_"
@@ -282,14 +282,14 @@ def ants_slice_refine(z, prev_mat=None):
     t_w = load2d(out_t)  # (X,Y)
 
     # Overwrite slice z in the *baseline* registered 3-D outputs
-    ref_g_img = nib.load(str(amu_g_step0_ext))
-    ref_t_img = nib.load(str(amu_t2s_step0_ext))
+    ref_g_img = nib.load(str(file_amu_g_step0_ext))
+    ref_t_img = nib.load(str(file_amu_t2s_step0_ext))
     g3d = ref_g_img.get_fdata()
     t3d = ref_t_img.get_fdata()
     g3d[:, :, z] = g_w
     t3d[:, :, z] = t_w
-    nib.Nifti1Image(g3d, ref_g_img.affine, ref_g_img.header).to_filename(str(amu_g_step0_ext))
-    nib.Nifti1Image(t3d, ref_t_img.affine, ref_t_img.header).to_filename(str(amu_t2s_step0_ext))
+    nib.Nifti1Image(g3d, ref_g_img.affine, ref_g_img.header).to_filename(str(file_amu_g_step0_ext))
+    nib.Nifti1Image(t3d, ref_t_img.affine, ref_t_img.header).to_filename(str(file_amu_t2s_step0_ext))
 
     return mat
 
